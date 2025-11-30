@@ -1,55 +1,87 @@
-{
-  "mode": "veg",                 // "seedling" | "veg" | "bloom" | "custom"
+const fs = require("fs");
+const path = require("path");
 
-  "light": {
-    "auto": true,
-    "onHour": 6,                 // 06:00 an
-    "offHour": 0                 // 00:00 aus (=> 18/6)
-  },
+const FILE_PATH = path.join("/tmp", "config.json");
 
-  "heat": {
-    "enabled": true,
-    "comfortMin": 22.0,          // darunter Heizung an
-    "comfortMax": 26.0,          // darüber sicher aus
-    "hysteresis": 1.0            // kleines Pufferband
-  },
+// Default-Konfiguration (Veg-Phase)
+function getDefaultConfig() {
+  return {
+    mode: "veg",
 
-  "exhaust": {
-    "enabled": true,
-    "intervalEnabled": true,
-    "intervalSec": 600,          // alle 10 min
-    "runtimeSec": 120,           // für 2 min an
+    light: {
+      auto: true,
+      onHour: 6,
+      offHour: 0
+    },
 
-    "tempOn": 27.0,              // ab 27°C Abluft an
-    "tempOff": 25.5,             // unter 25.5°C wieder aus
+    heat: {
+      enabled: true,
+      comfortMin: 22.0,
+      comfortMax: 26.0,
+      hysteresis: 1.0
+    },
 
-    "humOn": 75.0,               // ab 75% Abluft an
-    "humOff": 65.0,              // unter 65% wieder aus
+    exhaust: {
+      enabled: true,
+      intervalEnabled: true,
+      intervalSec: 600,
+      runtimeSec: 120,
+      tempOn: 27.0,
+      tempOff: 25.5,
+      humOn: 75.0,
+      humOff: 65.0,
+      extremeColdOffTemp: 18.0
+    },
 
-    "extremeColdOffTemp": 18.0   // darunter Abluft aus lassen, auch wenn feucht
-  },
+    fan: {
+      enabled: true,
+      intervalEnabled: true,
+      intervalSec: 600,
+      runtimeSec: 180,
+      tempBoostOn: 26.0,
+      tempBoostOff: 25.0,
+      humBoostOn: 70.0,
+      humBoostOff: 60.0
+    },
 
-  "fan": {
-    "enabled": true,
-    "intervalEnabled": true,
-    "intervalSec": 600,          // alle 10 min
-    "runtimeSec": 180,           // 3 min Umluft
+    humidity: {
+      targetMin: 55.0,
+      targetMax: 70.0
+    },
 
-    "tempBoostOn": 26.0,         // ab 26°C Umluft Dauer-AN
-    "tempBoostOff": 25.0,
-
-    "humBoostOn": 70.0,          // ab 70% Umluft Dauer-AN
-    "humBoostOff": 60.0
-  },
-
-  "humidity": {
-    "targetMin": 55.0,           // für Anzeigen / späteres Finetuning
-    "targetMax": 70.0
-  },
-
-  "safety": {
-    "safetyMaxTemp": 32.0,       // darüber: Heizung AUS, Abluft AN
-    "safetyMinTemp": 16.0,       // darunter: Abluft AUS, Heizung bevorzugt
-    "hardMaxHumidity": 90.0      // extremes Feuchte-Limit
-  }
+    safety: {
+      safetyMaxTemp: 32.0,
+      safetyMinTemp: 16.0,
+      hardMaxHumidity: 90.0
+    }
+  };
 }
+
+module.exports = (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  if (req.method !== "GET") {
+    res.statusCode = 405;
+    res.end(JSON.stringify({ error: "Only GET allowed" }));
+    return;
+  }
+
+  try {
+    if (!fs.existsSync(FILE_PATH)) {
+      const def = getDefaultConfig();
+      res.statusCode = 200;
+      res.end(JSON.stringify(def, null, 2));
+      return;
+    }
+
+    const raw = fs.readFileSync(FILE_PATH, "utf8");
+    const parsed = JSON.parse(raw);
+    res.statusCode = 200;
+    res.end(JSON.stringify(parsed, null, 2));
+  } catch (err) {
+    res.statusCode = 500;
+    res.end(
+      JSON.stringify({ error: "Failed to read config", details: String(err) })
+    );
+  }
+};
