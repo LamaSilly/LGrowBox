@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const FILE_PATH = path.join("/tmp", "config.json");
+const API_KEY = "growbox2025";
 
 module.exports = (req, res) => {
   res.setHeader("Content-Type", "application/json");
@@ -18,19 +19,25 @@ module.exports = (req, res) => {
     try {
       const data = JSON.parse(body || "{}");
 
-      if (data.apikey !== "growbox2025") {
+      if (data.apikey !== API_KEY) {
         res.statusCode = 401;
         res.end(JSON.stringify({ error: "Invalid API key" }));
         return;
       }
 
-      if (typeof data.config !== "object") {
+      if (typeof data.config !== "object" || data.config === null) {
         res.statusCode = 400;
         res.end(JSON.stringify({ error: "Missing 'config' object" }));
         return;
       }
 
-      fs.writeFileSync(FILE_PATH, JSON.stringify(data.config, null, 2));
+      // Minimal-Check auf wichtige Felder (nur als grobe Absicherung)
+      const cfg = data.config;
+
+      // Optional: hier könnte man noch mehr validieren
+      // z.B. range-checks, required fields etc.
+
+      fs.writeFileSync(FILE_PATH, JSON.stringify(cfg, null, 2));
 
       res.statusCode = 200;
       res.end(JSON.stringify({ success: true }));
