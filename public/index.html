@@ -5,84 +5,204 @@
   <title>GrowBox Dashboard</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
+    :root {
+      --bg: #04040a;
+      --bg-card: #111221;
+      --bg-card-soft: #151627;
+      --border-subtle: #2b2c3f;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79,70,229,0.2);
+      --accent-strong: #22c55e;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+      --danger-soft: rgba(239,68,68,0.16);
+      --shadow-soft: 0 18px 35px rgba(0,0,0,0.45);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
     * { box-sizing: border-box; }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #050509;
-      color: #f5f5f5;
       margin: 0;
       padding: 16px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
+      background: radial-gradient(circle at top, #111827, #020617);
+      color: var(--text-main);
     }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-weight: 600;
+    }
+
     h1 {
-      font-size: 1.6rem;
-      margin: 0 0 4px;
+      font-size: 1.8rem;
+      letter-spacing: 0.02em;
     }
+
     h2 {
       font-size: 1.1rem;
-      margin: 0 0 6px;
+      margin-bottom: 4px;
     }
-    .subtitle {
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-bottom: 12px;
+
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 12px;
-    }
-    @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: 1.2fr 1fr;
-      }
-    }
-    .card {
-      background: radial-gradient(circle at top left, #222233, #111119);
-      border-radius: 12px;
-      padding: 12px 14px;
-      border: 1px solid #313144;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-    }
-    .row {
+
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
+      gap: 12px;
     }
-    .label {
-      font-size: 0.8rem;
-      color: #a6a6c0;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3px;
     }
-    .value {
-      font-size: 1.3rem;
-    }
-    .small {
-      font-size: 0.8rem;
-      color: #a0a0a0;
-    }
-    .chip {
+
+    .badge {
       display: inline-flex;
       align-items: center;
-      padding: 3px 9px;
+      padding: 4px 10px;
       border-radius: 999px;
+      background: rgba(31,41,55,0.9);
+      border: 1px solid rgba(55,65,81,0.9);
       font-size: 0.75rem;
-      background: #181824;
-      color: #c0c0ff;
-      border: 1px solid #333355;
       gap: 6px;
+      color: var(--text-muted);
     }
-    .chip-dot {
+
+    .badge-dot {
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      background: #00d46a;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.35);
     }
-    .chip-dot.off {
-      background: #f05454;
+    .badge-dot.off {
+      background: #f97373;
+      box-shadow: 0 0 0 4px rgba(248,113,113,0.25);
     }
+
+    .badge-label-strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 799px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(12,19,38,0.98));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .pill-small {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      color: var(--text-muted);
+      background: rgba(15,23,42,0.7);
+    }
+
+    .metrics-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .metric {
+      flex: 1 1 120px;
+      padding: 8px;
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle at top left, #1f2937, #020617);
+      border: 1px solid rgba(55,65,81,0.9);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+
+    .metric-value {
+      font-size: 1.35rem;
+    }
+
+    .metric-unit {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: 3px;
+    }
+
+    .metric-extra {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .soil-list {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .soil-chip {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(55,65,81,0.9);
+      margin-right: 4px;
+      margin-bottom: 3px;
+    }
+
+    .soil-label {
+      color: #e5e7eb;
+      margin-right: 3px;
+    }
+
+    .small-muted {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
     .relay-row {
       display: flex;
       justify-content: space-between;
@@ -91,287 +211,508 @@
       margin-bottom: 6px;
       flex-wrap: wrap;
     }
-    .relay-name {
-      font-weight: 500;
-      font-size: 0.95rem;
+
+    .relay-left {
+      min-width: 0;
     }
-    button {
+
+    .relay-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .relay-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .relay-pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-top: 3px;
+      background: #111827;
+      color: #e5e7eb;
+      border: 1px solid rgba(75,85,99,0.9);
+    }
+
+    .relay-pill.on {
+      background: rgba(22,163,74,0.12);
+      color: #bbf7d0;
+      border-color: rgba(34,197,94,0.8);
+    }
+
+    .relay-pill.off {
+      background: rgba(185,28,28,0.14);
+      color: #fecaca;
+      border-color: rgba(239,68,68,0.85);
+    }
+
+    .relay-buttons button {
       border-radius: 999px;
       border: none;
       padding: 5px 12px;
       font-size: 0.8rem;
       cursor: pointer;
       margin-left: 4px;
+      min-width: 48px;
     }
+
     .btn-on {
-      background: #1d7b36;
-      color: #e3ffe9;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #ecfdf3;
+      box-shadow: 0 4px 12px rgba(34,197,94,0.4);
     }
+
     .btn-off {
-      background: #7b1d1d;
-      color: #ffe3e3;
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      color: #fef2f2;
+      box-shadow: 0 4px 12px rgba(239,68,68,0.45);
     }
-    .pill {
-      padding: 3px 9px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      background: #202033;
-      color: #ddd;
-      display: inline-block;
-      margin-top: 4px;
+
+    .btn-on:active, .btn-off:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
-    .pill.on {
-      background: #145214;
-      color: #bfffba;
-    }
-    .pill.off {
-      background: #4a1010;
-      color: #ffc4c4;
-    }
+
     .status-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 6px;
     }
+
     .status-pill {
-      padding: 3px 9px;
+      padding: 4px 9px;
       border-radius: 999px;
       font-size: 0.75rem;
-      background: #191920;
-      color: #b0b0b0;
+      background: rgba(15,23,42,0.95);
+      color: var(--text-muted);
+      border: 1px solid rgba(55,65,81,0.9);
     }
+
+    .status-pill.highlight {
+      color: #e5e7eb;
+      border-color: var(--accent);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .status-pill.error {
+      color: #fecaca;
+      border-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.85);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    .btn-ghost:active {
+      transform: translateY(1px);
+    }
+
+    .debug-card {
+      margin-top: 12px;
+    }
+
     pre {
       margin: 0;
-      font-size: 0.8rem;
-      background: #080812;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(55,65,81,0.9);
       padding: 8px;
-      border-radius: 8px;
-      overflow-x: auto;
+      max-height: 220px;
+      overflow: auto;
+      color: #e5e7eb;
     }
   </style>
 </head>
 <body>
-  <h1>GrowBox Dashboard</h1>
-  <div class="subtitle">
-    ESP32&nbsp;• Sensoren • Relaissteuerung • Cloud-Telemetrie
-  </div>
-
-  <div class="grid">
-    <!-- Linke Spalte: Live-Werte -->
-    <div class="card">
-      <div class="row">
-        <h2>Live-Sensoren</h2>
-        <span class="chip" id="chip-connection">
-          <span class="chip-dot" id="chip-dot"></span>
-          <span id="chip-text">warte auf Daten…</span>
-        </span>
-      </div>
-
-      <div class="row">
-        <div>
-          <div class="label">Temperatur</div>
-          <div class="value" id="val-temp">–.– °C</div>
-        </div>
-        <div>
-          <div class="label">Luftfeuchte</div>
-          <div class="value" id="val-hum">–.– %</div>
+  <div class="app">
+    <!-- Kopfbereich -->
+    <div class="header">
+      <div>
+        <h1>GrowBox Dashboard</h1>
+        <div class="subtitle">
+          ESP32 • Sensoren • Relaissteuerung • Cloud-Telemetrie
         </div>
       </div>
+      <div class="badge">
+        <span id="conn-dot" class="badge-dot off"></span>
+        <span class="badge-label-strong" id="conn-label">Keine Daten</span>
+        <span id="conn-detail">warte auf erste Telemetrie…</span>
+      </div>
+    </div>
 
-      <div class="row">
-        <div>
-          <div class="label">Bodenfeuchte</div>
-          <div class="small">
-            Soil1: <span id="soil1">– %</span> •
-            Soil2: <span id="soil2">– %</span> •
-            Soil3: <span id="soil3">– %</span>
+    <!-- Hauptlayout -->
+    <div class="layout">
+      <!-- Linke Seite: Sensoren -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Klima & Feuchtigkeit</h2>
+            <div class="card-subtitle">
+              Live-Werte von Temperatur, Luftfeuchte und Bodenfeuchte.
+            </div>
+          </div>
+          <span class="pill-small" id="last-updated-pill">Zuletzt: –</span>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric">
+            <div class="metric-label">Temperatur</div>
+            <div class="metric-value">
+              <span id="val-temp">–.–</span>
+              <span class="metric-unit">°C</span>
+            </div>
+            <div class="metric-extra" id="temp-extra">Bereich: cannabisfreundlich</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Luftfeuchte</div>
+            <div class="metric-value">
+              <span id="val-hum">–.–</span>
+              <span class="metric-unit">%</span>
+            </div>
+            <div class="metric-extra" id="hum-extra">Ziel: 50–70 %, je nach Phase</div>
+          </div>
+        </div>
+
+        <div class="metrics-row" style="margin-top:8px;">
+          <div class="metric" style="flex: 1 1 100%;">
+            <div class="metric-label">Bodenfeuchte</div>
+            <div class="soil-list">
+              <span class="soil-chip">
+                <span class="soil-label">Soil1</span>
+                <span id="soil1">– %</span>
+              </span>
+              <span class="soil-chip">
+                <span class="soil-label">Soil2</span>
+                <span id="soil2">– %</span>
+              </span>
+              <span class="soil-chip">
+                <span class="soil-label">Soil3</span>
+                <span id="soil3">– %</span>
+              </span>
+            </div>
+            <div class="metric-extra" style="margin-top:6px;">
+              <span class="small-muted">
+                Hinweis: 0 % ist normal, solange die Sensoren noch „in der Luft“ hängen.
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div style="margin-top:8px">
-        <div class="label">Zuletzt aktualisiert</div>
-        <div class="small" id="val-updated">–</div>
+      <!-- Rechte Seite: Relais -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Relais-Steuerung</h2>
+            <div class="card-subtitle">
+              Schaltet Heizung, Umluft, Abluft und Licht über die Cloud.
+            </div>
+          </div>
+          <span class="pill-small">Modus: manuell (Cloud)</span>
+        </div>
+
+        <!-- Heizung -->
+        <div class="relay-row">
+          <div class="relay-left">
+            <div class="relay-name">Heizung</div>
+            <div class="relay-desc">Hält die Temperatur im optimalen Bereich.</div>
+            <span class="relay-pill off" id="pill-heat">unbekannt</span>
+          </div>
+          <div class="relay-buttons">
+            <button class="btn-on" onclick="setRelay('heat', true)">AN</button>
+            <button class="btn-off" onclick="setRelay('heat', false)">AUS</button>
+          </div>
+        </div>
+
+        <!-- Umluft -->
+        <div class="relay-row">
+          <div class="relay-left">
+            <div class="relay-name">Umluft</div>
+            <div class="relay-desc">Verhindert stehende Luft und stärkt die Pflanzen.</div>
+            <span class="relay-pill off" id="pill-fan">unbekannt</span>
+          </div>
+          <div class="relay-buttons">
+            <button class="btn-on" onclick="setRelay('fan', true)">AN</button>
+            <button class="btn-off" onclick="setRelay('fan', false)">AUS</button>
+          </div>
+        </div>
+
+        <!-- Abluft -->
+        <div class="relay-row">
+          <div class="relay-left">
+            <div class="relay-name">Abluft</div>
+            <div class="relay-desc">Entfernt warme, feuchte Luft und Gerüche.</div>
+            <span class="relay-pill off" id="pill-exhaust">unbekannt</span>
+          </div>
+          <div class="relay-buttons">
+            <button class="btn-on" onclick="setRelay('exhaust', true)">AN</button>
+            <button class="btn-off" onclick="setRelay('exhaust', false)">AUS</button>
+          </div>
+        </div>
+
+        <!-- Licht -->
+        <div class="relay-row">
+          <div class="relay-left">
+            <div class="relay-name">Licht</div>
+            <div class="relay-desc">Beleuchtung der Growbox (z.B. LED-Panel).</div>
+            <span class="relay-pill off" id="pill-light">unbekannt</span>
+          </div>
+          <div class="relay-buttons">
+            <button class="btn-on" onclick="setRelay('light', true)">AN</button>
+            <button class="btn-off" onclick="setRelay('light', false)">AUS</button>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <span class="status-pill highlight" id="status-relay">Bereit</span>
+          <span class="status-pill" id="status-state"></span>
+        </div>
       </div>
     </div>
 
-    <!-- Rechte Spalte: Relais-Steuerung -->
-    <div class="card">
-      <h2>Relais-Steuerung</h2>
-      <div class="small" style="margin-bottom:8px;">
-        Relaiszustände setzen, die der ESP32 alle paar Sekunden aus der Cloud holt.
+    <!-- Debugbereich -->
+    <div class="card debug-card">
+      <div class="section-title-row">
+        <div class="section-title">Debug / Rohdaten</div>
+        <button class="btn-ghost" onclick="manualRefresh()">Jetzt aktualisieren</button>
       </div>
-
-      <div class="relay-row">
-        <div>
-          <div class="relay-name">Heizung</div>
-          <span class="pill" id="pill-heat">unbekannt</span>
-        </div>
-        <div>
-          <button class="btn-on"  onclick="setRelay('heat', true)">AN</button>
-          <button class="btn-off" onclick="setRelay('heat', false)">AUS</button>
-        </div>
+      <div class="small-muted" style="margin-bottom:6px;">
+        Zeigt den letzten Telemetrie-Datensatz, den der ESP32 an <code>/api/telemetry</code> gesendet hat.
       </div>
-
-      <div class="relay-row">
-        <div>
-          <div class="relay-name">Umluft</div>
-          <span class="pill" id="pill-fan">unbekannt</span>
-        </div>
-        <div>
-          <button class="btn-on"  onclick="setRelay('fan', true)">AN</button>
-          <button class="btn-off" onclick="setRelay('fan', false)">AUS</button>
-        </div>
-      </div>
-
-      <div class="relay-row">
-        <div>
-          <div class="relay-name">Abluft</div>
-          <span class="pill" id="pill-exhaust">unbekannt</span>
-        </div>
-        <div>
-          <button class="btn-on"  onclick="setRelay('exhaust', true)">AN</button>
-          <button class="btn-off" onclick="setRelay('exhaust', false)">AUS</button>
-        </div>
-      </div>
-
-      <div class="relay-row">
-        <div>
-          <div class="relay-name">Licht</div>
-          <span class="pill" id="pill-light">unbekannt</span>
-        </div>
-        <div>
-          <button class="btn-on"  onclick="setRelay('light', true)">AN</button>
-          <button class="btn-off" onclick="setRelay('light', false)">AUS</button>
-        </div>
-      </div>
-
-      <div class="status-row">
-        <span class="status-pill" id="status-relay">Status: bereit</span>
-        <span class="status-pill" id="status-state"></span>
-      </div>
+      <pre id="latest-json">Noch keine Telemetrie empfangen.</pre>
     </div>
-  </div>
-
-  <!-- Rohes JSON bei Bedarf -->
-  <div class="card" style="margin-top:12px;">
-    <h2>Debug: letzte Telemetrie (Rohdaten)</h2>
-    <pre id="latest-json">Noch keine Daten geladen.</pre>
   </div>
 
   <script>
-    let relayState = {
+    // ------------------------------
+    // Globale Zustände
+    // ------------------------------
+    var relayState = {
       heat: false,
       fan: false,
       exhaust: false,
-      light: false,
+      light: false
     };
 
-    function setPill(id, on) {
-      const el = document.getElementById(id);
+    // ------------------------------
+    // Hilfsfunktionen UI
+    // ------------------------------
+    function setRelayPill(id, on) {
+      var el = document.getElementById(id);
+      if (!el) return;
       el.textContent = on ? "AN" : "AUS";
       el.classList.remove("on", "off");
       el.classList.add(on ? "on" : "off");
     }
 
     function updateRelayUI() {
-      setPill("pill-heat", relayState.heat);
-      setPill("pill-fan", relayState.fan);
-      setPill("pill-exhaust", relayState.exhaust);
-      setPill("pill-light", relayState.light);
+      setRelayPill("pill-heat", relayState.heat);
+      setRelayPill("pill-fan", relayState.fan);
+      setRelayPill("pill-exhaust", relayState.exhaust);
+      setRelayPill("pill-light", relayState.light);
 
-      const s =
-        `heat=${relayState.heat ? "AN" : "AUS"}, ` +
-        `fan=${relayState.fan ? "AN" : "AUS"}, ` +
-        `exhaust=${relayState.exhaust ? "AN" : "AUS"}, ` +
-        `light=${relayState.light ? "AN" : "AUS"}`;
-      document.getElementById("status-state").textContent = s;
+      var s =
+        "Heizung=" + (relayState.heat ? "AN" : "AUS") + ", " +
+        "Umluft=" + (relayState.fan ? "AN" : "AUS") + ", " +
+        "Abluft=" + (relayState.exhaust ? "AN" : "AUS") + ", " +
+        "Licht=" + (relayState.light ? "AN" : "AUS");
+
+      var statusState = document.getElementById("status-state");
+      if (statusState) statusState.textContent = s;
     }
 
+    function safeNumber(value, fallback) {
+      if (typeof value === "number" && !isNaN(value)) return value;
+      return fallback;
+    }
+
+    function setConnectionStatus(online, detailText) {
+      var dot = document.getElementById("conn-dot");
+      var label = document.getElementById("conn-label");
+      var detail = document.getElementById("conn-detail");
+      if (!dot || !label || !detail) return;
+
+      if (online) {
+        dot.classList.remove("off");
+        label.textContent = "ESP verbunden";
+        detail.textContent = detailText || "Telemetrie aktiv";
+      } else {
+        dot.classList.add("off");
+        label.textContent = "Keine Verbindung";
+        detail.textContent = detailText || "keine Telemetrie empfangen";
+      }
+    }
+
+    // ------------------------------
+    // API-Aufrufe
+    // ------------------------------
     async function loadRelayState() {
       try {
-        const res = await fetch("/api/relays");
-        const data = await res.json();
-        relayState = data;
-        updateRelayUI();
+        var res = await fetch("/api/relays");
+        var data = await res.json();
+        if (data && typeof data === "object") {
+          relayState.heat = !!data.heat;
+          relayState.fan = !!data.fan;
+          relayState.exhaust = !!data.exhaust;
+          relayState.light = !!data.light;
+          updateRelayUI();
+        }
       } catch (e) {
-        console.error(e);
+        console.error("Fehler beim Laden von /api/relays:", e);
       }
     }
 
     async function setRelay(name, value) {
       relayState[name] = value;
       try {
-        const res = await fetch("/api/relays", {
+        var body = JSON.stringify({
+          apikey: "growbox2025",
+          heat: relayState.heat,
+          fan: relayState.fan,
+          exhaust: relayState.exhaust,
+          light: relayState.light
+        });
+
+        var res = await fetch("/api/relays", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            apikey: "growbox2025",
-            ...relayState,
-          }),
+          body: body
         });
-        const data = await res.json();
-        relayState = data;
-        document.getElementById("status-relay").textContent =
-          "Status: Befehl gesendet (" +
-          name +
-          " → " +
-          (value ? "AN" : "AUS") +
-          ")";
-        updateRelayUI();
-      } catch (e) {
-        document.getElementById("status-relay").textContent =
-          "Status: Fehler beim Senden";
-        console.error(e);
-      }
-    }
 
-    async function loadLatest() {
-      try {
-        const res = await fetch("/api/latest");
-        const data = await res.json();
-        document.getElementById("latest-json").textContent = JSON.stringify(
-          data,
-          null,
-          2
-        );
+        var data = await res.json();
+        if (data && typeof data === "object") {
+          relayState.heat = !!data.heat;
+          relayState.fan = !!data.fan;
+          relayState.exhaust = !!data.exhaust;
+          relayState.light = !!data.light;
+          updateRelayUI();
+        }
 
-        if (data && !data.error) {
-          document.getElementById("chip-dot").classList.remove("off");
-          document.getElementById("chip-text").textContent = "ESP online";
-
-          document.getElementById("val-temp").textContent =
-            (data.temperature ?? 0).toFixed(1) + " °C";
-          document.getElementById("val-hum").textContent =
-            (data.humidity ?? 0).toFixed(1) + " %";
-
-          document.getElementById("soil1").textContent =
-            (data.soil1 ?? 0) + " %";
-          document.getElementById("soil2").textContent =
-            (data.soil2 ?? 0) + " %";
-          document.getElementById("soil3").textContent =
-            (data.soil3 ?? 0) + " %";
-
-          document.getElementById("val-updated").textContent =
-            data.receivedAt || "unbekannt";
-        } else {
-          document.getElementById("chip-dot").classList.add("off");
-          document.getElementById("chip-text").textContent = "keine Daten";
+        var statusRelay = document.getElementById("status-relay");
+        if (statusRelay) {
+          statusRelay.textContent =
+            "Befehl gesendet: " + name + " → " + (value ? "AN" : "AUS");
+          statusRelay.classList.remove("error");
+          statusRelay.classList.add("highlight");
         }
       } catch (e) {
-        document.getElementById("chip-dot").classList.add("off");
-        document.getElementById("chip-text").textContent = "Fehler";
-        console.error(e);
+        console.error("Fehler beim Senden an /api/relays:", e);
+        var statusRelay = document.getElementById("status-relay");
+        if (statusRelay) {
+          statusRelay.textContent = "Fehler beim Senden an /api/relays";
+          statusRelay.classList.add("error");
+        }
       }
     }
 
-    // alle 5s Telemetrie aktualisieren
-    setInterval(loadLatest, 5000);
+    async function loadTelemetry() {
+      try {
+        // Cache umgehen mit Zeitstempel
+        var res = await fetch("/api/telemetry?t=" + Date.now());
+        var data = await res.json();
 
-    // Initialer Load
+        var debugBox = document.getElementById("latest-json");
+        if (debugBox) {
+          debugBox.textContent = JSON.stringify(data, null, 2);
+        }
+
+        if (!data || data.error) {
+          setConnectionStatus(false, "noch keine Telemetrie");
+          return;
+        }
+
+        // Verbindung anzeigen
+        setConnectionStatus(true, "letzter Datensatz: " + (data.receivedAt || "unbekannt"));
+
+        // Klimadaten
+        var temp = safeNumber(data.temperature, 0);
+        var hum  = safeNumber(data.humidity, 0);
+
+        var valTemp = document.getElementById("val-temp");
+        var valHum  = document.getElementById("val-hum");
+        if (valTemp) valTemp.textContent = temp.toFixed(1);
+        if (valHum)  valHum.textContent  = hum.toFixed(1);
+
+        // Bodenfeuchte
+        var s1 = safeNumber(data.soil1, 0);
+        var s2 = safeNumber(data.soil2, 0);
+        var s3 = safeNumber(data.soil3, 0);
+
+        var soil1El = document.getElementById("soil1");
+        var soil2El = document.getElementById("soil2");
+        var soil3El = document.getElementById("soil3");
+        if (soil1El) soil1El.textContent = s1 + " %";
+        if (soil2El) soil2El.textContent = s2 + " %";
+        if (soil3El) soil3El.textContent = s3 + " %";
+
+        // Zeit
+        var pill = document.getElementById("last-updated-pill");
+        if (pill) {
+          pill.textContent = "Zuletzt: " + (data.receivedAt || "unbekannt");
+        }
+
+        // Optional kleine Hinweise
+        var tempExtra = document.getElementById("temp-extra");
+        var humExtra  = document.getElementById("hum-extra");
+
+        if (tempExtra) {
+          if (temp < 18) tempExtra.textContent = "Hinweis: eher kühl – Heizung prüfen.";
+          else if (temp > 29) tempExtra.textContent = "Hinweis: sehr warm – Abluft/Leistung prüfen.";
+          else tempExtra.textContent = "Bereich: cannabisfreundlich.";
+        }
+
+        if (humExtra) {
+          if (hum > 80) humExtra.textContent = "Warnung: sehr hohe Luftfeuchte, Schimmelgefahr.";
+          else if (hum < 40) humExtra.textContent = "Hinweis: eher trocken, ggf. mehr gießen / Luft befeuchten.";
+          else humExtra.textContent = "Ziel: je nach Phase meist 50–70 %.";
+        }
+
+      } catch (e) {
+        console.error("Fehler beim Laden von /api/telemetry:", e);
+        setConnectionStatus(false, "Fehler beim Laden");
+      }
+    }
+
+    function manualRefresh() {
+      loadTelemetry();
+      loadRelayState();
+    }
+
+    // ------------------------------
+    // Initialisierung
+    // ------------------------------
     loadRelayState();
-    loadLatest();
+    loadTelemetry();
+    // alle 5s Telemetrie aktualisieren
+    setInterval(loadTelemetry, 5000);
   </script>
 </body>
 </html>
