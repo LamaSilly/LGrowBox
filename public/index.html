@@ -8,7 +8,6 @@
     :root {
       --bg: #04040a;
       --bg-card: #111221;
-      --bg-card-soft: #151627;
       --border-subtle: #2b2c3f;
       --accent: #4f46e5;
       --accent-soft: rgba(79,70,229,0.2);
@@ -101,7 +100,7 @@
       gap: 12px;
     }
 
-    @media (max-width: 799px) {
+    @media (max-width: 960px) {
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -113,6 +112,7 @@
       border: 1px solid var(--border-subtle);
       padding: 12px 14px;
       box-shadow: var(--shadow-soft);
+      margin-bottom: 10px;
     }
 
     .card-header {
@@ -331,10 +331,6 @@
       transform: translateY(1px);
     }
 
-    .debug-card {
-      margin-top: 12px;
-    }
-
     pre {
       margin: 0;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -348,11 +344,82 @@
       overflow: auto;
       color: #e5e7eb;
     }
+
+    /* Einstellungen-Formular */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.8rem;
+    }
+
+    .form-label {
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group select {
+      background: rgba(15,23,42,0.95);
+      border-radius: 8px;
+      border: 1px solid rgba(55,65,81,0.9);
+      padding: 4px 8px;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .form-inline {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .form-inline input {
+      max-width: 60px;
+    }
+
+    .settings-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #eef2ff;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.55);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Kopfbereich -->
+    <!-- Header -->
     <div class="header">
       <div>
         <h1>GrowBox Dashboard</h1>
@@ -367,9 +434,9 @@
       </div>
     </div>
 
-    <!-- Hauptlayout -->
+    <!-- Live-Daten & Relais -->
     <div class="layout">
-      <!-- Linke Seite: Sensoren -->
+      <!-- Links: Klima & Feuchtigkeit -->
       <div class="card">
         <div class="card-header">
           <div>
@@ -388,7 +455,7 @@
               <span id="val-temp">–.–</span>
               <span class="metric-unit">°C</span>
             </div>
-            <div class="metric-extra" id="temp-extra">Bereich: cannabisfreundlich</div>
+            <div class="metric-extra" id="temp-extra">Bereich: cannabisfreundlich.</div>
           </div>
 
           <div class="metric">
@@ -397,7 +464,7 @@
               <span id="val-hum">–.–</span>
               <span class="metric-unit">%</span>
             </div>
-            <div class="metric-extra" id="hum-extra">Ziel: 50–70 %, je nach Phase</div>
+            <div class="metric-extra" id="hum-extra">Ziel: 50–70 %, je nach Phase.</div>
           </div>
         </div>
 
@@ -427,7 +494,7 @@
         </div>
       </div>
 
-      <!-- Rechte Seite: Relais -->
+      <!-- Rechts: Relais-Steuerung -->
       <div class="card">
         <div class="card-header">
           <div>
@@ -439,11 +506,10 @@
           <span class="pill-small">Modus: manuell (Cloud)</span>
         </div>
 
-        <!-- Heizung -->
         <div class="relay-row">
           <div class="relay-left">
             <div class="relay-name">Heizung</div>
-            <div class="relay-desc">Hält die Temperatur im optimalen Bereich.</div>
+            <div class="relay-desc">Hält die Temperatur im gewünschten Bereich.</div>
             <span class="relay-pill off" id="pill-heat">unbekannt</span>
           </div>
           <div class="relay-buttons">
@@ -452,11 +518,10 @@
           </div>
         </div>
 
-        <!-- Umluft -->
         <div class="relay-row">
           <div class="relay-left">
             <div class="relay-name">Umluft</div>
-            <div class="relay-desc">Verhindert stehende Luft und stärkt die Pflanzen.</div>
+            <div class="relay-desc">Bewegt Luft im Zelt, stärkt die Pflanzen.</div>
             <span class="relay-pill off" id="pill-fan">unbekannt</span>
           </div>
           <div class="relay-buttons">
@@ -465,7 +530,6 @@
           </div>
         </div>
 
-        <!-- Abluft -->
         <div class="relay-row">
           <div class="relay-left">
             <div class="relay-name">Abluft</div>
@@ -478,11 +542,10 @@
           </div>
         </div>
 
-        <!-- Licht -->
         <div class="relay-row">
           <div class="relay-left">
             <div class="relay-name">Licht</div>
-            <div class="relay-desc">Beleuchtung der Growbox (z.B. LED-Panel).</div>
+            <div class="relay-desc">Beleuchtung (z.B. LED-Panel).</div>
             <span class="relay-pill off" id="pill-light">unbekannt</span>
           </div>
           <div class="relay-buttons">
@@ -498,8 +561,115 @@
       </div>
     </div>
 
-    <!-- Debugbereich -->
-    <div class="card debug-card">
+    <!-- Einstellungen-Card -->
+    <div class="card">
+      <div class="section-title-row">
+        <div class="section-title">Einstellungen (Logik)</div>
+        <button class="btn-ghost" onclick="loadConfig()">Config neu laden</button>
+      </div>
+      <div class="small-muted">
+        Hier kannst du die Grenzwerte und Intervalle für Heizung, Abluft, Umluft und Licht festlegen.
+        Diese Werte werden in <code>/api/config</code> gespeichert und können später vom ESP genutzt werden.
+      </div>
+
+      <div class="settings-grid" style="margin-top:8px;">
+        <!-- Mode -->
+        <div class="form-group">
+          <label class="form-label" for="cfg-mode">Profil</label>
+          <select id="cfg-mode" onchange="applyModePreset()">
+            <option value="seedling">Seedling / Keimling</option>
+            <option value="veg">Veg (Wachstum)</option>
+            <option value="bloom">Bloom (Blüte)</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <!-- Licht -->
+        <div class="form-group">
+          <label class="form-label">Licht (Stunden)</label>
+          <div class="form-inline">
+            <span>an:</span>
+            <input id="cfg-light-on" type="number" min="0" max="23" />
+            <span>aus:</span>
+            <input id="cfg-light-off" type="number" min="0" max="23" />
+          </div>
+        </div>
+
+        <!-- Heizung -->
+        <div class="form-group">
+          <label class="form-label">Heizung (°C)</label>
+          <div class="form-inline">
+            <span>min:</span>
+            <input id="cfg-heat-min" type="number" step="0.5" />
+            <span>max:</span>
+            <input id="cfg-heat-max" type="number" step="0.5" />
+          </div>
+        </div>
+
+        <!-- Abluft - Temp -->
+        <div class="form-group">
+          <label class="form-label">Abluft Temp (°C)</label>
+          <div class="form-inline">
+            <span>an:</span>
+            <input id="cfg-exh-temp-on" type="number" step="0.5" />
+            <span>aus:</span>
+            <input id="cfg-exh-temp-off" type="number" step="0.5" />
+          </div>
+        </div>
+
+        <!-- Abluft - Feuchte -->
+        <div class="form-group">
+          <label class="form-label">Abluft Feuchte (%)</label>
+          <div class="form-inline">
+            <span>an:</span>
+            <input id="cfg-exh-hum-on" type="number" step="1" />
+            <span>aus:</span>
+            <input id="cfg-exh-hum-off" type="number" step="1" />
+          </div>
+        </div>
+
+        <!-- Abluft Intervall -->
+        <div class="form-group">
+          <label class="form-label">Abluft Intervall (min)</label>
+          <div class="form-inline">
+            <span>alle</span>
+            <input id="cfg-exh-int" type="number" step="1" />
+            <span>für</span>
+            <input id="cfg-exh-run" type="number" step="1" />
+          </div>
+        </div>
+
+        <!-- Umluft Intervall -->
+        <div class="form-group">
+          <label class="form-label">Umluft Intervall (min)</label>
+          <div class="form-inline">
+            <span>alle</span>
+            <input id="cfg-fan-int" type="number" step="1" />
+            <span>für</span>
+            <input id="cfg-fan-run" type="number" step="1" />
+          </div>
+        </div>
+
+        <!-- Umluft Boost -->
+        <div class="form-group">
+          <label class="form-label">Umluft Boost</label>
+          <div class="form-inline">
+            <span>T°:</span>
+            <input id="cfg-fan-temp-on" type="number" step="0.5" />
+            <span>RH:</span>
+            <input id="cfg-fan-hum-on" type="number" step="1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-footer">
+        <div class="small-muted" id="cfg-status">Änderungen noch nicht gespeichert.</div>
+        <button class="btn-primary" onclick="saveConfig()">Einstellungen speichern</button>
+      </div>
+    </div>
+
+    <!-- Debug / Rohdaten -->
+    <div class="card">
       <div class="section-title-row">
         <div class="section-title">Debug / Rohdaten</div>
         <button class="btn-ghost" onclick="manualRefresh()">Jetzt aktualisieren</button>
@@ -513,17 +683,35 @@
 
   <script>
     // ------------------------------
-    // Globale Zustände
+    // Globale Zustände / Helpers
     // ------------------------------
-    var relayState = {
-      heat: false,
-      fan: false,
-      exhaust: false,
-      light: false
-    };
+    var relayState = { heat: false, fan: false, exhaust: false, light: false };
+    var currentConfig = null;
+
+    function safeNumber(value, fallback) {
+      if (typeof value === "number" && !isNaN(value)) return value;
+      return fallback;
+    }
+
+    function setConnectionStatus(online, detailText) {
+      var dot = document.getElementById("conn-dot");
+      var label = document.getElementById("conn-label");
+      var detail = document.getElementById("conn-detail");
+      if (!dot || !label || !detail) return;
+
+      if (online) {
+        dot.classList.remove("off");
+        label.textContent = "ESP verbunden";
+        detail.textContent = detailText || "Telemetrie aktiv";
+      } else {
+        dot.classList.add("off");
+        label.textContent = "Keine Verbindung";
+        detail.textContent = detailText || "keine Telemetrie empfangen";
+      }
+    }
 
     // ------------------------------
-    // Hilfsfunktionen UI
+    // Relais UI
     // ------------------------------
     function setRelayPill(id, on) {
       var el = document.getElementById(id);
@@ -549,31 +737,6 @@
       if (statusState) statusState.textContent = s;
     }
 
-    function safeNumber(value, fallback) {
-      if (typeof value === "number" && !isNaN(value)) return value;
-      return fallback;
-    }
-
-    function setConnectionStatus(online, detailText) {
-      var dot = document.getElementById("conn-dot");
-      var label = document.getElementById("conn-label");
-      var detail = document.getElementById("conn-detail");
-      if (!dot || !label || !detail) return;
-
-      if (online) {
-        dot.classList.remove("off");
-        label.textContent = "ESP verbunden";
-        detail.textContent = detailText || "Telemetrie aktiv";
-      } else {
-        dot.classList.add("off");
-        label.textContent = "Keine Verbindung";
-        detail.textContent = detailText || "keine Telemetrie empfangen";
-      }
-    }
-
-    // ------------------------------
-    // API-Aufrufe
-    // ------------------------------
     async function loadRelayState() {
       try {
         var res = await fetch("/api/relays");
@@ -633,9 +796,11 @@
       }
     }
 
+    // ------------------------------
+    // Telemetrie / Live-Daten
+    // ------------------------------
     async function loadTelemetry() {
       try {
-        // Cache umgehen mit Zeitstempel
         var res = await fetch("/api/telemetry?t=" + Date.now());
         var data = await res.json();
 
@@ -649,10 +814,8 @@
           return;
         }
 
-        // Verbindung anzeigen
         setConnectionStatus(true, "letzter Datensatz: " + (data.receivedAt || "unbekannt"));
 
-        // Klimadaten
         var temp = safeNumber(data.temperature, 0);
         var hum  = safeNumber(data.humidity, 0);
 
@@ -661,7 +824,6 @@
         if (valTemp) valTemp.textContent = temp.toFixed(1);
         if (valHum)  valHum.textContent  = hum.toFixed(1);
 
-        // Bodenfeuchte
         var s1 = safeNumber(data.soil1, 0);
         var s2 = safeNumber(data.soil2, 0);
         var s3 = safeNumber(data.soil3, 0);
@@ -673,19 +835,17 @@
         if (soil2El) soil2El.textContent = s2 + " %";
         if (soil3El) soil3El.textContent = s3 + " %";
 
-        // Zeit
         var pill = document.getElementById("last-updated-pill");
         if (pill) {
           pill.textContent = "Zuletzt: " + (data.receivedAt || "unbekannt");
         }
 
-        // Optional kleine Hinweise
         var tempExtra = document.getElementById("temp-extra");
         var humExtra  = document.getElementById("hum-extra");
 
         if (tempExtra) {
           if (temp < 18) tempExtra.textContent = "Hinweis: eher kühl – Heizung prüfen.";
-          else if (temp > 29) tempExtra.textContent = "Hinweis: sehr warm – Abluft/Leistung prüfen.";
+          else if (temp > 29) tempExtra.textContent = "Hinweis: sehr warm – Abluft/Umluft prüfen.";
           else tempExtra.textContent = "Bereich: cannabisfreundlich.";
         }
 
@@ -707,11 +867,160 @@
     }
 
     // ------------------------------
-    // Initialisierung
+    // Config laden / speichern
+    // ------------------------------
+    function fillConfigForm(cfg) {
+      currentConfig = cfg;
+
+      var modeSel = document.getElementById("cfg-mode");
+      if (modeSel && cfg.mode) modeSel.value = cfg.mode;
+
+      // Licht
+      document.getElementById("cfg-light-on").value  = cfg.light ? cfg.light.onHour  : 6;
+      document.getElementById("cfg-light-off").value = cfg.light ? cfg.light.offHour : 0;
+
+      // Heizung
+      document.getElementById("cfg-heat-min").value = cfg.heat ? cfg.heat.comfortMin : 22;
+      document.getElementById("cfg-heat-max").value = cfg.heat ? cfg.heat.comfortMax : 26;
+
+      // Abluft
+      document.getElementById("cfg-exh-temp-on").value  = cfg.exhaust ? cfg.exhaust.tempOn  : 27;
+      document.getElementById("cfg-exh-temp-off").value = cfg.exhaust ? cfg.exhaust.tempOff : 25.5;
+      document.getElementById("cfg-exh-hum-on").value   = cfg.exhaust ? cfg.exhaust.humOn   : 75;
+      document.getElementById("cfg-exh-hum-off").value  = cfg.exhaust ? cfg.exhaust.humOff  : 65;
+      document.getElementById("cfg-exh-int").value      = cfg.exhaust ? (cfg.exhaust.intervalSec / 60) : 10;
+      document.getElementById("cfg-exh-run").value      = cfg.exhaust ? (cfg.exhaust.runtimeSec / 60)  : 2;
+
+      // Umluft
+      document.getElementById("cfg-fan-int").value     = cfg.fan ? (cfg.fan.intervalSec / 60) : 10;
+      document.getElementById("cfg-fan-run").value     = cfg.fan ? (cfg.fan.runtimeSec / 60)  : 3;
+      document.getElementById("cfg-fan-temp-on").value = cfg.fan ? cfg.fan.tempBoostOn : 26;
+      document.getElementById("cfg-fan-hum-on").value  = cfg.fan ? cfg.fan.humBoostOn  : 70;
+
+      var statusEl = document.getElementById("cfg-status");
+      if (statusEl) statusEl.textContent = "Config geladen.";
+    }
+
+    async function loadConfig() {
+      try {
+        var res = await fetch("/api/config?t=" + Date.now());
+        var cfg = await res.json();
+        fillConfigForm(cfg);
+      } catch (e) {
+        console.error("Fehler beim Laden von /api/config:", e);
+        var statusEl = document.getElementById("cfg-status");
+        if (statusEl) statusEl.textContent = "Fehler beim Laden der Config.";
+      }
+    }
+
+    function applyModePreset() {
+      var modeSel = document.getElementById("cfg-mode");
+      if (!modeSel || !currentConfig) return;
+
+      var mode = modeSel.value;
+      currentConfig.mode = mode;
+
+      if (mode === "seedling") {
+        document.getElementById("cfg-heat-min").value = 24;
+        document.getElementById("cfg-heat-max").value = 27;
+        document.getElementById("cfg-exh-hum-on").value  = 80;
+        document.getElementById("cfg-exh-hum-off").value = 70;
+      } else if (mode === "veg") {
+        document.getElementById("cfg-heat-min").value = 22;
+        document.getElementById("cfg-heat-max").value = 26;
+        document.getElementById("cfg-exh-hum-on").value  = 75;
+        document.getElementById("cfg-exh-hum-off").value = 65;
+      } else if (mode === "bloom") {
+        document.getElementById("cfg-heat-min").value = 20;
+        document.getElementById("cfg-heat-max").value = 25;
+        document.getElementById("cfg-exh-hum-on").value  = 65;
+        document.getElementById("cfg-exh-hum-off").value = 55;
+      }
+
+      var statusEl = document.getElementById("cfg-status");
+      if (statusEl) statusEl.textContent = "Preset für " + mode + " angewendet (noch nicht gespeichert).";
+    }
+
+    async function saveConfig() {
+      if (!currentConfig) currentConfig = {};
+
+      var modeSel = document.getElementById("cfg-mode");
+      currentConfig.mode = modeSel ? modeSel.value : "custom";
+
+      currentConfig.light = {
+        auto: true,
+        onHour: parseInt(document.getElementById("cfg-light-on").value || "6", 10),
+        offHour: parseInt(document.getElementById("cfg-light-off").value || "0", 10)
+      };
+
+      currentConfig.heat = {
+        enabled: true,
+        comfortMin: parseFloat(document.getElementById("cfg-heat-min").value || "22"),
+        comfortMax: parseFloat(document.getElementById("cfg-heat-max").value || "26"),
+        hysteresis: 1.0
+      };
+
+      var exhIntMin = parseFloat(document.getElementById("cfg-exh-int").value || "10");
+      var exhRunMin = parseFloat(document.getElementById("cfg-exh-run").value || "2");
+
+      currentConfig.exhaust = {
+        enabled: true,
+        intervalEnabled: true,
+        intervalSec: exhIntMin * 60,
+        runtimeSec: exhRunMin * 60,
+        tempOn: parseFloat(document.getElementById("cfg-exh-temp-on").value || "27"),
+        tempOff: parseFloat(document.getElementById("cfg-exh-temp-off").value || "25.5"),
+        humOn: parseFloat(document.getElementById("cfg-exh-hum-on").value || "75"),
+        humOff: parseFloat(document.getElementById("cfg-exh-hum-off").value || "65"),
+        extremeColdOffTemp: 18.0
+      };
+
+      var fanIntMin = parseFloat(document.getElementById("cfg-fan-int").value || "10");
+      var fanRunMin = parseFloat(document.getElementById("cfg-fan-run").value || "3");
+
+      currentConfig.fan = {
+        enabled: true,
+        intervalEnabled: true,
+        intervalSec: fanIntMin * 60,
+        runtimeSec: fanRunMin * 60,
+        tempBoostOn: parseFloat(document.getElementById("cfg-fan-temp-on").value || "26"),
+        tempBoostOff: 25.0,
+        humBoostOn: parseFloat(document.getElementById("cfg-fan-hum-on").value || "70"),
+        humBoostOff: 60.0
+      };
+
+      var statusEl = document.getElementById("cfg-status");
+
+      try {
+        var body = JSON.stringify({
+          apikey: "growbox2025",
+          config: currentConfig
+        });
+
+        var res = await fetch("/api/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body
+        });
+
+        var out = await res.json();
+        if (out && out.success) {
+          if (statusEl) statusEl.textContent = "Einstellungen gespeichert.";
+        } else {
+          if (statusEl) statusEl.textContent = "Fehler beim Speichern.";
+        }
+      } catch (e) {
+        console.error("Fehler beim Speichern /api/save:", e);
+        if (statusEl) statusEl.textContent = "Fehler beim Speichern.";
+      }
+    }
+
+    // ------------------------------
+    // Init
     // ------------------------------
     loadRelayState();
     loadTelemetry();
-    // alle 5s Telemetrie aktualisieren
+    loadConfig();
     setInterval(loadTelemetry, 5000);
   </script>
 </body>
