@@ -1,0 +1,45 @@
+{
+  "mode": "AUTO",
+  "profile": "CUSTOM",
+  "temperature": {
+    "min": 22.0,
+    "max": 26.0,
+    "hysteresis": 1.5,
+    "umluft_temp_threshold": 26.0,
+    "abluft_temp_threshold": 27.0
+  },
+  "humidity": {
+    "max": 70.0,
+    "min": 40.0,
+    "hysteresis": 5.0,
+    "abluft_hum_threshold": 65.0
+  },
+  "soil": {
+    "soil1_min": 1200,
+    "soil1_max": 3000,
+    "soil2_min": 1200,
+    "soil2_max": 3000,
+    "soil3_min": 1200,
+    "soil3_max": 3000
+  },
+  "light": {
+    "on": "06:00",
+    "off": "24:00",
+    "mode": "CUSTOM"
+  },
+  "umluft": {
+    "interval": 600,
+    "runtime": 120,
+    "temp_threshold": 26.0
+  },
+  "override": {
+    "heat": null,
+    "fan": null,
+    "exhaust": null,
+    "light": null
+  },
+  "system": {
+    "timezone": "Europe/Berlin",
+    "autosync": true
+  }
+}
