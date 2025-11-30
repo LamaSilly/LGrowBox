@@ -15,7 +15,7 @@ module.exports = (req, res) => {
   try {
     const data = fs.readFileSync(FILE_PATH, "utf8");
     res.statusCode = 200;
-    res.end(data);
+    res.end(data); // Inhalt von latest.json direkt zurück
   } catch (err) {
     res.statusCode = 500;
     res.end(
