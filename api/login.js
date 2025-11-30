@@ -1,20 +1,36 @@
-import crypto from "crypto";
+const crypto = require("crypto");
 
-const PASSWORD_HASH = crypto
-  .createHash("sha256")
-  .update("488248")
-  .digest("hex");
+const ADMIN_PASSWORD = "growbox2025";
 
-export default async function handler(req, res) {
-  const { password } = req.body || {};
+module.exports = (req, res) => {
+  res.setHeader("Content-Type", "application/json");
 
-  const hash = crypto.createHash("sha256").update(password).digest("hex");
-
-  if (hash !== PASSWORD_HASH) {
-    return res.status(401).json({ error: "Unauthorized" });
+  if (req.method !== "POST") {
+    res.statusCode = 405;
+    res.end(JSON.stringify({ error: "Only POST allowed" }));
+    return;
   }
 
-  const token = crypto.randomBytes(32).toString("hex");
+  let body = "";
+  req.on("data", (c) => (body += c.toString()));
+  req.on("end", () => {
+    try {
+      const data = JSON.parse(body || "{}");
 
-  return res.status(200).json({ token });
-}
+      if (data.password !== ADMIN_PASSWORD) {
+        res.statusCode = 401;
+        res.end(JSON.stringify({ error: "Wrong password" }));
+        return;
+      }
+
+      const token = crypto.randomBytes(32).toString("hex");
+      res.statusCode = 200;
+      res.end({ token: token });
+    } catch (err) {
+      res.statusCode = 400;
+      res.end(
+        JSON.stringify({ error: "Invalid JSON", details: String(err) })
+      );
+    }
+  });
+};
