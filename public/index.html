@@ -1,219 +1,377 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <title>GrowBox Relay & Telemetry</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <style>
-      body {
-        font-family: system-ui, sans-serif;
-        background: #0b0b0f;
-        color: #f5f5f5;
-        margin: 0;
-        padding: 16px;
+<head>
+  <meta charset="UTF-8" />
+  <title>GrowBox Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #050509;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 16px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin: 0 0 4px;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 6px;
+    }
+    .subtitle {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: 1.2fr 1fr;
       }
-      h1 {
-        font-size: 1.6rem;
-        margin-bottom: 8px;
-      }
-      .card {
-        background: #151520;
-        border-radius: 10px;
-        padding: 12px 16px;
-        margin-bottom: 12px;
-        border: 1px solid #303040;
-      }
-      .relay-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .relay-name {
-        font-weight: 500;
-      }
-      button {
-        border-radius: 999px;
-        border: none;
-        padding: 6px 14px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        margin-left: 4px;
-      }
-      .on {
-        background: #1f7a1f;
-        color: #dfffd0;
-      }
-      .off {
-        background: #7a1f1f;
-        color: #ffd0d0;
-      }
-      .status-pill {
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        background: #222;
-        color: #aaa;
-      }
-      .status-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 4px;
-      }
-      pre {
-        margin: 0;
-        font-size: 0.8rem;
-        background: #11131a;
-        padding: 8px;
-        border-radius: 8px;
-        overflow-x: auto;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>GrowBox – Relay & Telemetrie</h1>
+    }
+    .card {
+      background: radial-gradient(circle at top left, #222233, #111119);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid #313144;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .label {
+      font-size: 0.8rem;
+      color: #a6a6c0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .value {
+      font-size: 1.3rem;
+    }
+    .small {
+      font-size: 0.8rem;
+      color: #a0a0a0;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #181824;
+      color: #c0c0ff;
+      border: 1px solid #333355;
+      gap: 6px;
+    }
+    .chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #00d46a;
+    }
+    .chip-dot.off {
+      background: #f05454;
+    }
+    .relay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .relay-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .btn-on {
+      background: #1d7b36;
+      color: #e3ffe9;
+    }
+    .btn-off {
+      background: #7b1d1d;
+      color: #ffe3e3;
+    }
+    .pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #202033;
+      color: #ddd;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    .pill.on {
+      background: #145214;
+      color: #bfffba;
+    }
+    .pill.off {
+      background: #4a1010;
+      color: #ffc4c4;
+    }
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .status-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #191920;
+      color: #b0b0b0;
+    }
+    pre {
+      margin: 0;
+      font-size: 0.8rem;
+      background: #080812;
+      padding: 8px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>GrowBox Dashboard</h1>
+  <div class="subtitle">
+    ESP32&nbsp;• Sensoren • Relaissteuerung • Cloud-Telemetrie
+  </div>
 
-    <!-- Info -->
+  <div class="grid">
+    <!-- Linke Spalte: Live-Werte -->
     <div class="card">
-      <div>
-        Oben: Relaiszustände setzen, die der ESP32 aus der Cloud holt.
-        <br />
-        Unten: letzte Telemetrie, die der ESP32 an die Cloud gesendet hat.
+      <div class="row">
+        <h2>Live-Sensoren</h2>
+        <span class="chip" id="chip-connection">
+          <span class="chip-dot" id="chip-dot"></span>
+          <span id="chip-text">warte auf Daten…</span>
+        </span>
+      </div>
+
+      <div class="row">
+        <div>
+          <div class="label">Temperatur</div>
+          <div class="value" id="val-temp">–.– °C</div>
+        </div>
+        <div>
+          <div class="label">Luftfeuchte</div>
+          <div class="value" id="val-hum">–.– %</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <div class="label">Bodenfeuchte</div>
+          <div class="small">
+            Soil1: <span id="soil1">– %</span> •
+            Soil2: <span id="soil2">– %</span> •
+            Soil3: <span id="soil3">– %</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:8px">
+        <div class="label">Zuletzt aktualisiert</div>
+        <div class="small" id="val-updated">–</div>
       </div>
     </div>
 
-    <!-- Relais-Steuerung -->
-    <div class="card" id="relay-card">
-      <h2>Relais</h2>
+    <!-- Rechte Spalte: Relais-Steuerung -->
+    <div class="card">
+      <h2>Relais-Steuerung</h2>
+      <div class="small" style="margin-bottom:8px;">
+        Relaiszustände setzen, die der ESP32 alle paar Sekunden aus der Cloud holt.
+      </div>
 
       <div class="relay-row">
-        <div class="relay-name">Heizung</div>
         <div>
-          <button class="on" onclick="setRelay('heat', true)">AN</button>
-          <button class="off" onclick="setRelay('heat', false)">AUS</button>
+          <div class="relay-name">Heizung</div>
+          <span class="pill" id="pill-heat">unbekannt</span>
+        </div>
+        <div>
+          <button class="btn-on"  onclick="setRelay('heat', true)">AN</button>
+          <button class="btn-off" onclick="setRelay('heat', false)">AUS</button>
         </div>
       </div>
 
       <div class="relay-row">
-        <div class="relay-name">Umluft</div>
         <div>
-          <button class="on" onclick="setRelay('fan', true)">AN</button>
-          <button class="off" onclick="setRelay('fan', false)">AUS</button>
+          <div class="relay-name">Umluft</div>
+          <span class="pill" id="pill-fan">unbekannt</span>
+        </div>
+        <div>
+          <button class="btn-on"  onclick="setRelay('fan', true)">AN</button>
+          <button class="btn-off" onclick="setRelay('fan', false)">AUS</button>
         </div>
       </div>
 
       <div class="relay-row">
-        <div class="relay-name">Abluft</div>
         <div>
-          <button class="on" onclick="setRelay('exhaust', true)">AN</button>
-          <button class="off" onclick="setRelay('exhaust', false)">AUS</button>
+          <div class="relay-name">Abluft</div>
+          <span class="pill" id="pill-exhaust">unbekannt</span>
+        </div>
+        <div>
+          <button class="btn-on"  onclick="setRelay('exhaust', true)">AN</button>
+          <button class="btn-off" onclick="setRelay('exhaust', false)">AUS</button>
         </div>
       </div>
 
       <div class="relay-row">
-        <div class="relay-name">Licht</div>
         <div>
-          <button class="on" onclick="setRelay('light', true)">AN</button>
-          <button class="off" onclick="setRelay('light', false)">AUS</button>
+          <div class="relay-name">Licht</div>
+          <span class="pill" id="pill-light">unbekannt</span>
+        </div>
+        <div>
+          <button class="btn-on"  onclick="setRelay('light', true)">AN</button>
+          <button class="btn-off" onclick="setRelay('light', false)">AUS</button>
         </div>
       </div>
 
       <div class="status-row">
-        <span class="status-pill" id="status-text">
-          Status: noch nichts gesendet
-        </span>
-        <span class="status-pill" id="state-text"></span>
+        <span class="status-pill" id="status-relay">Status: bereit</span>
+        <span class="status-pill" id="status-state"></span>
       </div>
     </div>
+  </div>
 
-    <!-- Telemetrie-Anzeige -->
-    <div class="card">
-      <h2>Letzte Telemetrie</h2>
-      <button class="on" onclick="loadLatest()">Telemetrie aktualisieren</button>
-      <div style="margin-top: 8px">
-        <pre id="latest-json">Noch keine Daten geladen.</pre>
-      </div>
-    </div>
+  <!-- Rohes JSON bei Bedarf -->
+  <div class="card" style="margin-top:12px;">
+    <h2>Debug: letzte Telemetrie (Rohdaten)</h2>
+    <pre id="latest-json">Noch keine Daten geladen.</pre>
+  </div>
 
-    <script>
-      // ------- Relais-Logik wie gehabt -------
-      let state = {
-        heat: false,
-        fan: false,
-        exhaust: false,
-        light: false,
-      };
+  <script>
+    let relayState = {
+      heat: false,
+      fan: false,
+      exhaust: false,
+      light: false,
+    };
 
-      async function loadState() {
-        try {
-          const res = await fetch("/api/relays");
-          const data = await res.json();
-          state = data;
-          updateStateText();
-        } catch (e) {
-          console.error(e);
+    function setPill(id, on) {
+      const el = document.getElementById(id);
+      el.textContent = on ? "AN" : "AUS";
+      el.classList.remove("on", "off");
+      el.classList.add(on ? "on" : "off");
+    }
+
+    function updateRelayUI() {
+      setPill("pill-heat", relayState.heat);
+      setPill("pill-fan", relayState.fan);
+      setPill("pill-exhaust", relayState.exhaust);
+      setPill("pill-light", relayState.light);
+
+      const s =
+        `heat=${relayState.heat ? "AN" : "AUS"}, ` +
+        `fan=${relayState.fan ? "AN" : "AUS"}, ` +
+        `exhaust=${relayState.exhaust ? "AN" : "AUS"}, ` +
+        `light=${relayState.light ? "AN" : "AUS"}`;
+      document.getElementById("status-state").textContent = s;
+    }
+
+    async function loadRelayState() {
+      try {
+        const res = await fetch("/api/relays");
+        const data = await res.json();
+        relayState = data;
+        updateRelayUI();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function setRelay(name, value) {
+      relayState[name] = value;
+      try {
+        const res = await fetch("/api/relays", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            apikey: "growbox2025",
+            ...relayState,
+          }),
+        });
+        const data = await res.json();
+        relayState = data;
+        document.getElementById("status-relay").textContent =
+          "Status: Befehl gesendet (" +
+          name +
+          " → " +
+          (value ? "AN" : "AUS") +
+          ")";
+        updateRelayUI();
+      } catch (e) {
+        document.getElementById("status-relay").textContent =
+          "Status: Fehler beim Senden";
+        console.error(e);
+      }
+    }
+
+    async function loadLatest() {
+      try {
+        const res = await fetch("/api/latest");
+        const data = await res.json();
+        document.getElementById("latest-json").textContent = JSON.stringify(
+          data,
+          null,
+          2
+        );
+
+        if (data && !data.error) {
+          document.getElementById("chip-dot").classList.remove("off");
+          document.getElementById("chip-text").textContent = "ESP online";
+
+          document.getElementById("val-temp").textContent =
+            (data.temperature ?? 0).toFixed(1) + " °C";
+          document.getElementById("val-hum").textContent =
+            (data.humidity ?? 0).toFixed(1) + " %";
+
+          document.getElementById("soil1").textContent =
+            (data.soil1 ?? 0) + " %";
+          document.getElementById("soil2").textContent =
+            (data.soil2 ?? 0) + " %";
+          document.getElementById("soil3").textContent =
+            (data.soil3 ?? 0) + " %";
+
+          document.getElementById("val-updated").textContent =
+            data.receivedAt || "unbekannt";
+        } else {
+          document.getElementById("chip-dot").classList.add("off");
+          document.getElementById("chip-text").textContent = "keine Daten";
         }
+      } catch (e) {
+        document.getElementById("chip-dot").classList.add("off");
+        document.getElementById("chip-text").textContent = "Fehler";
+        console.error(e);
       }
+    }
 
-      function updateStateText() {
-        const s =
-          `heat=${state.heat ? "AN" : "AUS"}, ` +
-          `fan=${state.fan ? "AN" : "AUS"}, ` +
-          `exhaust=${state.exhaust ? "AN" : "AUS"}, ` +
-          `light=${state.light ? "AN" : "AUS"}`;
-        document.getElementById("state-text").textContent = s;
-      }
+    // alle 5s Telemetrie aktualisieren
+    setInterval(loadLatest, 5000);
 
-      async function setRelay(name, value) {
-        state[name] = value;
-        try {
-          const res = await fetch("/api/relays", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              apikey: "growbox2025",
-              ...state,
-            }),
-          });
-          const data = await res.json();
-          state = data;
-          document.getElementById("status-text").textContent =
-            "Status: Befehl gesendet (" +
-            name +
-            " → " +
-            (value ? "AN" : "AUS") +
-            ")";
-          updateStateText();
-        } catch (e) {
-          document.getElementById("status-text").textContent =
-            "Fehler beim Senden";
-          console.error(e);
-        }
-      }
-
-      // ------- Telemetrie laden -------
-      async function loadLatest() {
-        try {
-          const res = await fetch("/api/latest");
-          const data = await res.json();
-          document.getElementById("latest-json").textContent = JSON.stringify(
-            data,
-            null,
-            2
-          );
-        } catch (e) {
-          document.getElementById("latest-json").textContent =
-            "Fehler beim Laden der Telemetrie";
-          console.error(e);
-        }
-      }
-
-      // Beim Laden der Seite Relaiszustand + Telemetrie holen
-      loadState();
-      loadLatest();
-    </script>
-  </body>
+    // Initialer Load
+    loadRelayState();
+    loadLatest();
+  </script>
+</body>
 </html>
