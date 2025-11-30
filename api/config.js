@@ -3,15 +3,15 @@ const path = require("path");
 
 const FILE_PATH = path.join("/tmp", "config.json");
 
-// Default-Konfiguration (Veg-Phase)
+// Default-Konfiguration (Veg-Phase, sinnvolle Startwerte)
 function getDefaultConfig() {
   return {
-    mode: "veg",
+    mode: "veg", // "seedling" | "veg" | "bloom" | "custom"
 
     light: {
       auto: true,
-      onHour: 6,
-      offHour: 0
+      onHour: 6,  // 06:00 an
+      offHour: 0  // 00:00 aus -> 18/6
     },
 
     heat: {
@@ -24,23 +24,23 @@ function getDefaultConfig() {
     exhaust: {
       enabled: true,
       intervalEnabled: true,
-      intervalSec: 600,
-      runtimeSec: 120,
-      tempOn: 27.0,
-      tempOff: 25.5,
-      humOn: 75.0,
-      humOff: 65.0,
-      extremeColdOffTemp: 18.0
+      intervalSec: 600,   // alle 10 min
+      runtimeSec: 120,    // 2 min an
+      tempOn: 27.0,       // ab 27°C an
+      tempOff: 25.5,      // unter 25.5°C wieder aus
+      humOn: 75.0,        // ab 75% RH an
+      humOff: 65.0,       // unter 65% RH aus
+      extremeColdOffTemp: 18.0 // darunter lieber aus lassen
     },
 
     fan: {
       enabled: true,
       intervalEnabled: true,
-      intervalSec: 600,
-      runtimeSec: 180,
-      tempBoostOn: 26.0,
+      intervalSec: 600,   // alle 10 min
+      runtimeSec: 180,    // 3 min
+      tempBoostOn: 26.0,  // ab 26°C Dauer-AN
       tempBoostOff: 25.0,
-      humBoostOn: 70.0,
+      humBoostOn: 70.0,   // ab 70% Dauer-AN
       humBoostOff: 60.0
     },
 
