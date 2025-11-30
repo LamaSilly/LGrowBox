@@ -1,18 +1,44 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
-export default async function handler(req, res) {
-  const { token, config } = req.body || {};
+const FILE_PATH = path.join("/tmp", "config.json");
 
-  if (!token) return res.status(401).json({ error: "Missing token" });
+module.exports = (req, res) => {
+  res.setHeader("Content-Type", "application/json");
 
-  if (token.length < 30) {
-    return res.status(401).json({ error: "Invalid token" });
+  if (req.method !== "POST") {
+    res.statusCode = 405;
+    res.end(JSON.stringify({ error: "Only POST allowed" }));
+    return;
   }
 
-  const filePath = path.join(process.cwd(), "data", "config.json");
+  let body = "";
+  req.on("data", (c) => (body += c.toString()));
+  req.on("end", () => {
+    try {
+      const data = JSON.parse(body || "{}");
 
-  fs.writeFileSync(filePath, JSON.stringify(config, null, 2));
+      if (data.apikey !== "growbox2025") {
+        res.statusCode = 401;
+        res.end(JSON.stringify({ error: "Invalid API key" }));
+        return;
+      }
 
-  res.status(200).json({ saved: true });
-}
+      if (typeof data.config !== "object") {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: "Missing 'config' object" }));
+        return;
+      }
+
+      fs.writeFileSync(FILE_PATH, JSON.stringify(data.config, null, 2));
+
+      res.statusCode = 200;
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      res.statusCode = 400;
+      res.end(
+        JSON.stringify({ error: "Invalid JSON", details: String(err) })
+      );
+    }
+  });
+};
