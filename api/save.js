@@ -31,11 +31,8 @@ module.exports = (req, res) => {
         return;
       }
 
-      // Minimal-Check auf wichtige Felder (nur als grobe Absicherung)
       const cfg = data.config;
-
-      // Optional: hier könnte man noch mehr validieren
-      // z.B. range-checks, required fields etc.
+      // (optional: mehr Validierung)
 
       fs.writeFileSync(FILE_PATH, JSON.stringify(cfg, null, 2));
 
