@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>GrowBox Relay Test</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0b0b0f;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 16px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+    .card {
+      background: #151520;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      border: 1px solid #303040;
+    }
+    .relay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .relay-name {
+      font-weight: 500;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .on {
+      background: #1f7a1f;
+      color: #dfffd0;
+    }
+    .off {
+      background: #7a1f1f;
+      color: #ffd0d0;
+    }
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #222;
+      color: #aaa;
+    }
+    .status-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>GrowBox – Relay Test (Cloud → ESP)</h1>
+
+  <div class="card">
+    <div>Hier kannst du die Relais-Zustände setzen, die der ESP32 aus der Cloud holen soll.</div>
+  </div>
+
+  <div class="card" id="relay-card">
+    <div class="relay-row">
+      <div class="relay-name">Heizung</div>
+      <div>
+        <button class="on"  onclick="setRelay('heat', true)">AN</button>
+        <button class="off" onclick="setRelay('heat', false)">AUS</button>
+      </div>
+    </div>
+
+    <div class="relay-row">
+      <div class="relay-name">Umluft</div>
+      <div>
+        <button class="on"  onclick="setRelay('fan', true)">AN</button>
+        <button class="off" onclick="setRelay('fan', false)">AUS</button>
+      </div>
+    </div>
+
+    <div class="relay-row">
+      <div class="relay-name">Abluft</div>
+      <div>
+        <button class="on"  onclick="setRelay('exhaust', true)">AN</button>
+        <button class="off" onclick="setRelay('exhaust', false)">AUS</button>
+      </div>
+    </div>
+
+    <div class="relay-row">
+      <div class="relay-name">Licht</div>
+      <div>
+        <button class="on"  onclick="setRelay('light', true)">AN</button>
+        <button class="off" onclick="setRelay('light', false)">AUS</button>
+      </div>
+    </div>
+
+    <div class="status-row">
+      <span class="status-pill" id="status-text">Status: noch nichts gesendet</span>
+      <span class="status-pill" id="state-text"></span>
+    </div>
+  </div>
+
+  <script>
+    let state = {
+      heat: false,
+      fan: false,
+      exhaust: false,
+      light: false
+    };
+
+    async function loadState() {
+      try {
+        const res = await fetch("/api/relays");
+        const data = await res.json();
+        state = data;
+        updateStateText();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function updateStateText() {
+      const s = `heat=${state.heat ? "AN" : "AUS"}, `
+              + `fan=${state.fan ? "AN" : "AUS"}, `
+              + `exhaust=${state.exhaust ? "AN" : "AUS"}, `
+              + `light=${state.light ? "AN" : "AUS"}`;
+      document.getElementById("state-text").textContent = s;
+    }
+
+    async function setRelay(name, value) {
+      state[name] = value;
+      try {
+        const res = await fetch("/api/relays", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            apikey: "growbox2025",
+            ...state
+          })
+        });
+        const data = await res.json();
+        state = data;
+        document.getElementById("status-text").textContent =
+          "Status: Befehl gesendet (" + name + " → " + (value ? "AN" : "AUS") + ")";
+        updateStateText();
+      } catch (e) {
+        document.getElementById("status-text").textContent = "Fehler beim Senden";
+        console.error(e);
+      }
+    }
+
+    loadState();
+  </script>
+</body>
+</html>
